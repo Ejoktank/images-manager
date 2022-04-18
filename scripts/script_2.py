@@ -9,8 +9,10 @@ cwd = os.getcwd()
 outputFolder = cwd + "/Output/"
 closedFolder = cwd + "/Closed/"
 edgedFolder = cwd + "/Edged/"
-inputFilesCount = len(next(os.walk(cwd))[2]) - 1  # -1 - сам файл программы
 
+# Читаем все файлы из текущей директории
+files = next(os.walk(cwd))[2]
+inputFilesCount = len(files)  # -1 - сам файл программы
 
 def get_file_name(n): 
     if n > 99:
@@ -61,12 +63,13 @@ def check_angles(box):
     return True
 
 
-def find_circut(n):
+total = 0
+def find_circut(n, fn):
     # загружаем изображение, меняем цвет на оттенки серого и уменьшаем резкость
     # имя файла, который будем анализировать 
     image = cv2.imread(fn)
-    
     fn = get_file_name(n)
+
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blured = cv2.GaussianBlur(gray, (29, 29), 2)
     unsharp_image = cv2.addWeighted(blured, 1, blured, 1.3, 0, blured)
@@ -80,17 +83,15 @@ def find_circut(n):
     # найдем контуры в изображенииe
     closed = cv2.morphologyEx(edged, cv2.MORPH_CLOSE, kernel) 
     cv2.imwrite(os.path.join(closedFolder, "closed" + str(n) + ".jpg"), closed)
-    cnts = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[1] 
-    total = 0
-
+    cnts = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[0]
     # цикл по контурам 
     for c in cnts:
         rect = cv2.minAreaRect(c)
     # вычисляем периметр 
     
     # аппрокс. контур, чтобы избежать влияния шумов 
-        approx = cv2.approxPolyDP(c, 0.01 * peri, True)
         peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.01 * peri, True)
         if len(approx) != 4:
             continue
 
@@ -106,13 +107,16 @@ def find_circut(n):
             continue
 
     cv2.drawContours(image, [approx], -1, (0, 255, 0), 4) 
+    global total
     total += 1
 
     # показываем результирующее изображение if total != 0:
-
     print("Я нашёл {0} объект(а) на ".format(total) + "example" + str(n) + ".jpg")
 
     cv2.imwrite(os.path.join(outputFolder, "output" + str(n) + ".jpg"), image)
 
-    for n in range(1, inputFilesCount):
-        find_circut(n)
+# Делаем преобразование
+i = 0
+for n in range(0, inputFilesCount):
+    find_circut(n, files[i])
+    i += 1
