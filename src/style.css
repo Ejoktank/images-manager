@@ -1,0 +1,13 @@
+input:hover {
+    cursor: pointer;
+}
+
+.custom-file-input:lang(en)~.custom-file-label::after {
+    content: "Загрузить";
+}
+
+.photos>div {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
