@@ -17,7 +17,7 @@ app.get('/', async (req,res) => {
 
 // Текущая картинка
 app.get('/current', async (req,res) => {
-    res.sendFile(path.resolve(__dirname, 'img', 'test'));
+    res.sendFile(path.resolve(__dirname, 'img', 'test.jpg'));
 })
 
 // Загружаем картинку
@@ -25,9 +25,9 @@ app.post('/upload', async (req,res) => {
     const file = req.files.file;
     try {
         // Скачиваем
-        file.mv(path.resolve(__dirname, 'img', 'test'));
+        file.mv(path.resolve(__dirname, 'img', 'test.jpg'));
         // Гоняем питон
-        const proc = spawn('python3', ['../scripts/script_2.py'], { cwd : path.resolve(__dirname, 'img') });
+        const proc = spawn('python', ['../scripts/script_2.py'], { cwd : path.resolve(__dirname, 'img') });
         proc.on('exit', (code) => {
             if(code === 0) {
                 // Все хорошо, отправляем результат
