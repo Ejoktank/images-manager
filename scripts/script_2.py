@@ -67,7 +67,9 @@ total = 0
 def find_circut(n, fn):
     # загружаем изображение, меняем цвет на оттенки серого и уменьшаем резкость
     # имя файла, который будем анализировать 
+    print(fn)
     image = cv2.imread(fn)
+    print(image)
     fn = get_file_name(n)
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
