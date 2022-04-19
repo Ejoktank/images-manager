@@ -107,7 +107,7 @@ def find_circut(n, fn):
     total += 1
 
     # показываем результирующее изображение if total != 0:
-    print("Я нашёл {0} объект(а) на ".format(total) + "example" + str(n) + ".jpg")
+    # print("Я нашёл {0} объект(а) на ".format(total) + "example" + str(n) + ".jpg")
 
     cv2.imwrite(os.path.join(outputFolder, "output" + str(n) + ".jpg"), image)
 
