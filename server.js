@@ -27,7 +27,7 @@ app.post('/upload', async (req,res) => {
         // Скачиваем
         file.mv(path.resolve(__dirname, 'img', 'test'));
         // Гоняем питон
-        const proc = spawn('python3', ['../scripts/script_2.py'], { cwd : path.resolve(__dirname, 'img') });
+        const proc = spawn('python', ['../scripts/script_2.py'], { cwd : path.resolve(__dirname, 'img') });
         proc.on('exit', (code) => {
             if(code === 0) {
                 // Все хорошо, отправляем результат
