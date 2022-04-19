@@ -83,25 +83,20 @@ def find_circut(n, fn):
     # найдем контуры в изображенииe
     closed = cv2.morphologyEx(edged, cv2.MORPH_CLOSE, kernel) 
     cv2.imwrite(os.path.join(closedFolder, "closed" + str(n) + ".jpg"), closed)
-    cnts = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[0]
+    cnts, _ = cv2.findContours(closed.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
     # цикл по контурам 
     for c in cnts:
         rect = cv2.minAreaRect(c)
-    # вычисляем периметр 
-    
-    # аппрокс. контур, чтобы избежать влияния шумов 
+        # аппрокс. контур, чтобы избежать влияния шумов 
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.01 * peri, True)
         if len(approx) != 4:
             continue
-
-    # ищем площадь прямоугольника 
+        # ищем площадь прямоугольника 
         area = int(rect[1][0] * rect[1][1])
         if area < 3000:
             continue
-
-    # проверяем углы прямоугольника на соответствие пороговым значениям
-
+        # проверяем углы прямоугольника на соответствие пороговым значениям
         isRect = check_angles(approx) 
         if not isRect:
             continue
@@ -118,5 +113,5 @@ def find_circut(n, fn):
 # Делаем преобразование
 i = 0
 for n in range(0, inputFilesCount):
-    find_circut(n, files[i])
+    find_circut(n, os.path.join(cwd, files[i]))
     i += 1
