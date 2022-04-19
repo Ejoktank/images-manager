@@ -28,14 +28,8 @@ app.post('/upload', async (req,res) => {
         file.mv(path.resolve(__dirname, 'img', 'test.jpg'));
         // Гоняем питон
         const proc = spawn('python', ['../scripts/script_2.py'], { cwd : path.resolve(__dirname, 'img') });
-        proc.on('exit', (code) => {
-            if(code === 0) {
-                // Все хорошо, отправляем результат
-                res.sendFile(path.resolve(__dirname, 'img', 'Output', 'output0.jpg'));
-            } else {
-                // Были ошибки
-                res.sendStatus(500);
-            }
+        proc.on('exit', () => {
+            res.sendFile(path.resolve(__dirname, 'img', 'Output', 'output0.jpg'));
         });
         proc.on('error', () => { 
             // Скрипт сломался
