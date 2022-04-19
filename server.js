@@ -28,10 +28,20 @@ app.post('/upload', async (req,res) => {
         file.mv(path.resolve(__dirname, 'img', 'test'));
         // Гоняем питон
         const proc = spawn('python', ['../scripts/script_2.py'], { cwd : path.resolve(__dirname, 'img') });
+        let str = "";
+        let log = "";
+        proc.stderr.on('data', (c) => {
+            str += c.toString();
+        })
+        proc.stdout.on('data', (c) => {
+            log += c.toString();
+        })
         proc.on('exit', (code) => {
             if(code === 0) {
                 res.sendFile(path.resolve(__dirname, 'img', 'Output', 'output0.jpg'));
             } else {
+                console.log(log);
+                console.log(str);
                 console.log(`Exit code was: ${code}`);
                 res.sendStatus(500);
             }

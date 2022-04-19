@@ -69,7 +69,6 @@ def find_circut(n, fn):
     # имя файла, который будем анализировать 
     print(fn)
     image = cv2.imread(fn)
-    print(image)
     fn = get_file_name(n)
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -113,7 +112,7 @@ def find_circut(n, fn):
     cv2.imwrite(os.path.join(outputFolder, "output" + str(n) + ".jpg"), image)
 
 # Делаем преобразование
-i = 0
 for n in range(0, inputFilesCount):
-    find_circut(n, os.path.join(cwd, files[i]))
-    i += 1
+    print(cwd)
+    print(files[n])
+    find_circut(n, os.path.join(cwd, files[n]))
